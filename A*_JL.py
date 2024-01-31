@@ -6,29 +6,29 @@ class Node:
     def __init__(self, name, heuristic):
         self.name = name
         self.heuristic = heuristic
-        self.g = float('inf')  # Distance from start node
-        self.f = float('inf')  # Total estimated cost of the cheapest solution through this node
-        self.adjacent = {}  # Adjacent nodes and their costs
-        self.parent = None  # Parent node in the path
+        self.rootDist = float('inf')  # distance par rapport a la racine du graphe
+        self.nearestPathCost = float('inf')  # cout du chemin le plus court
+        self.neighbor = {}  # voisinage (noeuds adjacents dans le graphe)
+        self.parent = None  # noeud parent
 
     def __lt__(self, other):
-        return self.f < other.f
+        return self.nearestPathCost < other.nearestPathCost
 
     def add_edge(self, neighbor, cost):
-        self.adjacent[neighbor] = cost
+        self.neighbor[neighbor] = cost
 
 def astar(graph, start, end):
     start_node = graph[start]
-    start_node.g = 0
-    start_node.f = start_node.heuristic
+    start_node.rootDist = 0
+    start_node.nearestPathCost = start_node.heuristic
 
-    open_list = []
-    heapq.heappush(open_list, start_node)
-    closed_set = set()
+    explore = []
+    heapq.heappush(explore, start_node)
+    frontiere = set()
 
-    while open_list:
-        current_node = heapq.heappop(open_list)
-        closed_set.add(current_node)
+    while explore:
+        current_node = heapq.heappop(explore)
+        frontiere.add(current_node)
 
         if current_node.name == end:
             path = []
@@ -38,20 +38,20 @@ def astar(graph, start, end):
             return path[::-1]  # Return reversed path
 
         
-        for adj, cost in current_node.adjacent.items():
+        for adj, cost in current_node.neighbor.items():
             child_node = graph[adj]
-            if child_node in closed_set:
+            if child_node in frontiere:
                 continue
 
-            tentative_g_score = current_node.g + cost
+            tentative_g_score = current_node.rootDist + cost
 
-            if tentative_g_score < child_node.g:
+            if tentative_g_score < child_node.rootDist:
                 child_node.parent = current_node
-                child_node.g = tentative_g_score
-                child_node.f = tentative_g_score + child_node.heuristic
+                child_node.rootDist = tentative_g_score
+                child_node.nearestPathCost = tentative_g_score + child_node.heuristic
 
-                if child_node not in open_list:
-                    heapq.heappush(open_list, child_node)
+                if child_node not in explore:
+                    heapq.heappush(explore, child_node)
 
     return None
 
