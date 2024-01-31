@@ -46,7 +46,7 @@ def a_star(depart, but):
         _, _, current = heapq.heappop(open_set)
 
         if current == but:
-            # Reconstruct the path
+            # Reconstruit le chemin
             path = [current]
             while current in came_from:
                 current = came_from[current]

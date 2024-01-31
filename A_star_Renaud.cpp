@@ -7,7 +7,7 @@
 
 using namespace std;
 
-// Forward declaration of Edge
+
 struct Edge;
 
 struct Node {
@@ -51,9 +51,9 @@ struct CompareF {
 };
 
 vector<Node> aStar(Node& depart, Node& but) {
-    unordered_map<Node*, int> gScore;  // Cost from start to node
-    unordered_map<Node*, int> fScore;  // Estimated total cost from start to goal passing through node
-    unordered_map<Node*, Node*> cameFrom;  // Parent node in the optimal path
+    unordered_map<Node*, int> gScore;  // cout de depart jusuq'a la node
+    unordered_map<Node*, int> fScore;  // Estimated total cost from start to goal passing through node Cout total estimé du depart jusuq'au but passant par la node
+    unordered_map<Node*, Node*> cameFrom;  // chemin du parent
 
     priority_queue<pair<int, Node*>, vector<pair<int, Node*>>, CompareF> openSet;
 
@@ -66,7 +66,7 @@ vector<Node> aStar(Node& depart, Node& but) {
         openSet.pop();
 
         if (*current == but) {
-            // Reconstruct the path
+            // Reconstruit le chemin
             vector<Node> path;
             while (current != &depart) {
                 path.push_back(*current);
@@ -90,7 +90,7 @@ vector<Node> aStar(Node& depart, Node& but) {
         }
     }
 
-    // If the loop completes and no path is found, return an empty vector
+    // pas de chemin
     return vector<Node>();
 }
 
